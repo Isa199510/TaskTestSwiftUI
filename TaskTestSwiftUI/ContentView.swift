@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "", cart: getSelectedProducts(), favorites: getSelectedProducts(), latest: getSelectedProducts())
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+        NavigationView {
+//            SignInPageView()
+            TabBarView(user: $user)
+//            LatestVIew2()
         }
-        .padding()
     }
 }
 
