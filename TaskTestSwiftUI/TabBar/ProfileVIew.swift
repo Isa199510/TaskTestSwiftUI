@@ -22,7 +22,9 @@ struct ProfileView: View {
                     
                     //Photo Stack
                     VStack{
-                        selectedImage?
+                        
+//                        selectedImage?
+                        user.image?
                             .resizable()
                             .frame(width: 70, height: 70)
                             .scaledToFit()
@@ -31,6 +33,7 @@ struct ProfileView: View {
                         
                         Button(action: {
                             isShowingImagePicker = true
+                            print(user.image)
                         }) {
                             Text("Change photo")
                                 .font(.caption)
@@ -39,7 +42,8 @@ struct ProfileView: View {
                     }
                     .sheet(isPresented: $isShowingImagePicker) {
                         ImagePicker { image in
-                            selectedImage = Image(uiImage: image)
+//                            selectedImage = Image(uiImage: image)
+                            user.image = Image(uiImage: image)
                             isShowingImagePicker = false
                         }
                     }
@@ -100,7 +104,7 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(user: .constant(UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "", cart: getSelectedProducts(), favorites: [], latest: getSelectedProducts())))
+        ProfileView(user: .constant(UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "")))
     }
 }
 

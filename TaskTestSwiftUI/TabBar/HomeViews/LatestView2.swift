@@ -28,9 +28,6 @@ struct LatestVIew2: View {
             }
             
             ForEach(Array(latests.enumerated()), id: \.0) { (index, value) in
-//                let product = Product(name: value.name, price: Double(value.price), image: "")
-                
-//                ProductItemView(product: .constant(product))
                 Text(value.name)
                 AsyncImage(
                     url: URL(string: value.image_url),
@@ -42,7 +39,7 @@ struct LatestVIew2: View {
                     case .success(let image):
                         image
                             .resizable()
-                            .transition(.scale(scale: 0.1, anchor: .center))
+                            .transition(.scale(scale: 0.1, anchor: .topLeading))
                     case .failure:
                         Image(systemName: "wifi.slash")
                     @unknown default:
@@ -51,13 +48,8 @@ struct LatestVIew2: View {
                 }
                 .frame(width: 100, height: 100)
                 .background(Color.gray)
-//                .clipShape(Circle())
-//                Image(uiImage: UIImage(data: imagesData[index] ?? Data()) ?? UIImage())
             }
-     
-
         }
-        
     }
 }
 
@@ -66,22 +58,3 @@ struct LatestVIew2_Previews: PreviewProvider {
         LatestVIew2()
     }
 }
-
-//extension Image {
-//    func data(url:URL) -> Self {
-//        do {
-//            DispatchQueue.main.async {
-//                if let data = try? Data(contentsOf: url) {
-//                    return Image(uiImage: UIImage(data: data)!).resizable()
-//            }
-//
-//        }
-//
-//        } catch {
-//            return self
-//        }
-//        return self
-//            .resizable()
-//    }
-//}
-

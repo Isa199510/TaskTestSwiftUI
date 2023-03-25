@@ -16,6 +16,8 @@ struct PasswordConfirmationView: View {
     
     @State private var showTabBar = false
     
+    @State var products = PRODUCTS
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -34,17 +36,18 @@ struct PasswordConfirmationView: View {
                 
                 
                 CustomButtonView(title: "Continue") {
-                    print(user)
-                    if password == passwordConfirmation && !password.isEmpty && !passwordConfirmation.isEmpty {
+                    if password == passwordConfirmation && password.count > 5{
                         user.password = password
-                        userManager.registerUser(user: user)
+                        let dict: [String: Any] = ["id" : user.id, "firstname": user.firstname, "lastname": user.lastname, "email": user.email, "image" : user.image ?? "person.fill", "password" : user.password]
+                        UserDefaults.standard.set(dict, forKey: "user")
+//                        userManager.registerUser(user: user)
                         showTabBar.toggle()
                     }
                 }
                 .padding(.horizontal, 40)
                 .padding(.top, 50)
                 .fullScreenCover(isPresented: $showTabBar) {
-                    TabBarView(user: $user)
+                    TabBarView(user: $user, products: $products)
                 }
                 
                 Spacer(minLength: 200)
@@ -57,7 +60,7 @@ struct PasswordConfirmationView: View {
 
 struct PasswordConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
-        PasswordConfirmationView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "", cart: getSelectedProducts(), favorites: getSelectedProducts(), latest: getSelectedProducts())))
+        PasswordConfirmationView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "")))
     }
 }
 

@@ -16,6 +16,9 @@ struct LogInView: View {
     @State private var password = ""
     @State private var showTabBar = false
     
+    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "")
+    @State var products = PRODUCTS
+    
     var body: some View {
         
         NavigationView {
@@ -33,15 +36,22 @@ struct LogInView: View {
                 }
                 .padding(.horizontal, 40)
                 
-                
                 CustomButtonView(title: "Login") {
-//                    showTabBar.toggle()
                     if logIn.isValidEmail() {
-                        if logIn == log && password == pass {
-                            print("Welcome")
-                        } else {
-//                            logIn = ""
-                            password = ""
+                        if let dict = UserDefaults.standard.dictionary(forKey: "user") {
+                            let userFirstname = dict["firstname"] as? String ?? ""
+                            let userLastname = dict["lastname"] as? String ?? ""
+                            let userEmail = dict["email"] as? String ?? ""
+                            let userPassword = dict["password"] as? String ?? ""
+                            let userImage = dict["image"] as? Image ?? Image(systemName: "person.fill")
+                            
+                            if logIn == userEmail && password == userPassword {
+                                user = UserModel(firstname: userFirstname, lastname: userLastname, email: userEmail, password: userPassword)
+                                showTabBar.toggle()
+                            } else {
+                                print("Error")
+                            }
+                            
                         }
                     } else {
                         print("no valid")
@@ -50,7 +60,7 @@ struct LogInView: View {
                 .padding(.horizontal, 40)
                 .padding(.top, 50)
                 .fullScreenCover(isPresented: $showTabBar) {
-                    TabBarView(user: .constant(UserModel(firstname: "Isa", lastname: "", email: "Arbuhov", password: "", cart: getSelectedProducts(), favorites: getSelectedProducts(), latest: getSelectedProducts())))
+                    TabBarView(user: $user, products: $products)
                 }
                 
                 Spacer(minLength: 200)

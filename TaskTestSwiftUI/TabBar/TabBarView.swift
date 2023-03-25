@@ -10,22 +10,24 @@ import SwiftUI
 struct TabBarView: View {
     
     @State private var selected = 0
+    
     @Binding var user: UserModel
+    @Binding var products: [Product]
     
     var body: some View {
         VStack {
             
             switch selected {
             case 0:
-                HomeView(user: $user)
-                //            case 1:
-                //
+                HomeView(user: $user, products: $products)
             case 1:
-                SelectedProductsView(user: $user)
+                FavoritesView(user: $user)
+            case 2:
+                CartView(user: $user)
             case 4:
                 ProfileView(user: $user)
             default:
-                CartView()
+                Text("")
             }
             
             Spacer()
@@ -81,8 +83,16 @@ struct TabBarView: View {
 }
 
 struct TabBarView_Previews: PreviewProvider {
+    static var products = [
+            Product(name: "iPhone 5s", price: 25000, image: "iPhone5s"),
+            Product(name: "iPhone 6s", price: 30000, image: ""),
+            Product(name: "iPhone X", price: 40000, image: ""),
+            Product(name: "iPhone 11 Pro", price: 50000, image: ""),
+            Product(name: "iPhone 14 Pro", price: 80000, image: "")
+        ]
+    
     static var previews: some View {
-        TabBarView(user: .constant(userManager.currentUser ?? UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "", cart: getSelectedProducts(), favorites: [], latest: getSelectedProducts())))
+        TabBarView(user: .constant(userManager.currentUser ?? UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "")), products: .constant(products))
     }
 }
 

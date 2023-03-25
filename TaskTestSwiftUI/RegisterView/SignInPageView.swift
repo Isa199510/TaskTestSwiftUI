@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SignInPageView: View {
         
-    @State private var password: String = ""
     @State private var isSecure = true
     
     @State private var showLogIn = false
@@ -19,7 +18,7 @@ struct SignInPageView: View {
     @State private var lastNameText = ""
     @State private var email = ""
     
-    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "", cart: getSelectedProducts(), favorites: getSelectedProducts(), latest: getSelectedProducts())
+    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "")
     
     var body: some View {
         NavigationView {
@@ -36,13 +35,47 @@ struct SignInPageView: View {
                     TextFieldView(text: $email, placeholder: "Email")
                     
                     Button(action: {
-                        if !firstNameText.isEmpty && !lastNameText.isEmpty && !email.isEmpty {
-                            user = UserModel(firstname: firstNameText, lastname: lastNameText, email: email, password: "", cart: getSelectedProducts(), favorites: getSelectedProducts(), latest: getSelectedProducts())
-                            showPasswordConfirmation.toggle()
+                        if firstNameText.count >= 3 && lastNameText.count >= 3 && email.isValidEmail() {
+                            print(UserSettings.shared.users)
+                            
+                            // получаем сохраненные данные из UserDefaults
+//                            let defaults = UserDefaults.standard
+//                            var savedUsers = [UserModel]()
+//                            if let data = defaults.data(forKey: "users") {
+//                                let decoder = JSONDecoder()
+//                                savedUsers = try! decoder.decode([UserModel].self, from: data)
+//                            }
+
+                            // сохраняем только новые структуры
+//                            for savedUser in savedUsers {
+//                                if savedUsers.contains(where: { userModel in
+//                                    userModel.id == savedUser.id
+//                                }) {
+//                                    savedUsers.append(savedUser)
+//                                }
+//
+//                            }
+
+                            // сохраняем обновленные данные в UserDefaults
+//                            let encoder = JSONEncoder()
+//                            let data = try! encoder.encode(savedUsers)
+//                            defaults.set(data, forKey: "users")
+                            
+                            // здесь остановился
+                            
+//                            if let dict = UserDefaults.standard.dictionary(forKey: "user") {
+//                                let firstname = dict["firstname"] as? String ?? ""
+//                                let lastname = dict["lastname"] as? String ?? ""
+//                                let email = dict["email"] as? String ?? ""
+//                                print(firstname, lastname, email)
+//                                if email != user.email {
+//                                    print("email equal")
+//                                    user = UserModel(firstname: firstNameText, lastname: lastNameText, email: email, password: "")
+//                                    showPasswordConfirmation.toggle()
+//                                }
+//                            }
                         }
                         
-                        
-                        print(user)
                     }) {
                         Text("Sign in")
                             .frame(height: 50)
