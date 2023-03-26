@@ -1,15 +1,17 @@
 //
-//  LatestItemView.swift
+//  FlashSaleItemView.swift
 //  TaskTestSwiftUI
 //
-//  Created by Иса on 23.03.2023.
+//  Created by Иса on 25.03.2023.
 //
 
 import SwiftUI
 
-struct LatestItemView: View {
+struct FlashSaleItemView: View {
     
+    @Binding var user: UserModel
     @Binding var product: Product
+    
     
     var body: some View {
         GeometryReader { geometry in
@@ -35,15 +37,34 @@ struct LatestItemView: View {
                 }
                 
                 Text(product.name)
-                    .offset(x: -(geometry.size.width / 5), y: -(geometry.size.height / 5))
+                    .offset(x: -(geometry.size.width / 7), y: -(geometry.size.height / 5))
                     .font(.system(size: geometry.size.width / 10))
                     .foregroundColor(.accentColor)
 
-                Text(product.price.formatted() + "р")
-                    .offset(x: -(geometry.size.width / 5), y: -(geometry.size.height / 15))
+                Text("$" + product.price.formatted())
+                    .offset(x: -(geometry.size.width / 3), y: -(geometry.size.height / 15))
                     .font(.system(size: geometry.size.width / 15))
                     .foregroundColor(.accentColor)
 
+                Button(action: {
+                    if !user.favorites.contains(where: {$0.name == product.name}) {
+                        user.favorites.insert(product, at: 0)
+                    } else {
+                        guard let index = user.favorites.firstIndex(where: {$0.id == product.id}) else { return }
+                        user.favorites.remove(at: index)
+                    }
+                    product.isFavoritedToogle()
+                    
+                }) {
+                    
+                    Image(systemName: user.isProductInFavorites(product: product) ? "heart.fill" : "heart")
+                        .frame(width: geometry.size.width / 22, height: geometry.size.width / 22)
+                        .padding(10)
+                        .foregroundColor(user.isProductInFavorites(product: product) ? .red : .black)
+                        .background(Color.gray)
+                        .cornerRadius(geometry.size.width / 22 * 2)
+                }
+                .offset(x: geometry.size.width / 20, y:  -(geometry.size.height / 15))
 
                 Button(action: {
                     // action for button
@@ -63,10 +84,8 @@ struct LatestItemView: View {
     }
 }
 
-
-struct LatestItemView_Previews: PreviewProvider {
-    static var prod = Product(name: "Samsung", price: 12000, image: "https://avatars.mds.yandex.net/get-mpic/6251774/img_id4273297770790914968.jpeg/orig")
+struct FlashSaleItemView_Previews: PreviewProvider {
     static var previews: some View {
-        LatestItemView(product: .constant(prod))
+        FlashSaleItemView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "")), product: .constant(Product(name: "sfada", price: 123, image: "https://newbalance.ru/upload/iblock/697/iz997hht_nb_02_i.jpg")))
     }
 }

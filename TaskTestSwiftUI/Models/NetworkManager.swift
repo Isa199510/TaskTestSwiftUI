@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 enum NetworkError: Error {
     case invalidURL
@@ -18,29 +17,49 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init () {}
     
-    func fetchLatestList(
-        with url: String,
-        completion: @escaping(Result<[Latest], NetworkError>) -> Void) {
-            guard let url = URL(string: url) else {
-                completion(.failure(.invalidURL))
+    func fetchLatestList(with url: String, completion: @escaping(Result<[Latest], NetworkError>) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(.failure(.invalidURL))
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
+            guard let data = data else {
+                completion(.failure(.noData))
                 return
             }
+            do {
+                let json = try JSONDecoder().decode(LatestAPI.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(json.latest))
+                }
+            } catch  {
+                completion(.failure(.decodingError))
+            }
             
-            URLSession.shared.dataTask(with: url) { (data, _, error) in
-                guard let data = data else {
-                    completion(.failure(.noData))
-                    return
-                }
-                do {
-                    let json = try JSONDecoder().decode(LatestAPI.self, from: data)
-                    DispatchQueue.main.async {
-                        print(json)
-                        completion(.success(json.latest))
-                    }
-                } catch  {
-                    completion(.failure(.decodingError))
-                }
-                
-            }.resume()
+        }.resume()
+    }
+    
+    func fetchFlashSaleList(with url: String, completion: @escaping(Result<[FlashSale], NetworkError>) -> Void) {
+        guard let url = URL(string: url) else {
+            completion(.failure(.invalidURL))
+            return
         }
+        
+        URLSession.shared.dataTask(with: url) { (data, _, error) in
+            guard let data = data else {
+                completion(.failure(.noData))
+                return
+            }
+            do {
+                let json = try JSONDecoder().decode(FlashSaleAPI.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(json.flash_sale))
+                }
+            } catch  {
+                completion(.failure(.decodingError))
+            }
+            
+        }.resume()
+    }
 }

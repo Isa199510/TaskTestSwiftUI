@@ -18,17 +18,11 @@ struct TabBarView: View {
         VStack {
             
             switch selected {
-            case 0:
-                HomeView(user: $user, products: $products)
-            case 1:
-                FavoritesView(user: $user)
-            case 2:
-                CartView(user: $user)
-            case 4:
-                ProfileView(user: $user)
-            default:
-                Text("")
-            }
+            case 0: HomeView(user: $user, products: $products)
+            case 1: FavoritesView(user: $user)
+            case 2: CartView(user: $user)
+            case 4: ProfileView(user: $user)
+            default: Text("") }
             
             Spacer()
             
@@ -92,22 +86,7 @@ struct TabBarView_Previews: PreviewProvider {
         ]
     
     static var previews: some View {
-        TabBarView(user: .constant(userManager.currentUser ?? UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "")), products: .constant(products))
-    }
-}
-
-
-struct LargeTabBarIcon: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .imageScale(.large)
-            .frame(width: 30, height: 30)
-    }
-}
-
-extension View {
-    func largeTabBarIcon() -> some View {
-        self.modifier(LargeTabBarIcon())
+        TabBarView(user: .constant(UserModel(firstname: "Isa", lastname: "Arbuhov", email: "", password: "")), products: .constant(products))
     }
 }
 

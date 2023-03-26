@@ -34,61 +34,17 @@ struct SignInPageView: View {
                     TextFieldView(text: $lastNameText, placeholder: "Last name")
                     TextFieldView(text: $email, placeholder: "Email")
                     
-                    Button(action: {
+                    CustomButtonView(title: "Sign in") {
                         if firstNameText.count >= 3 && lastNameText.count >= 3 && email.isValidEmail() {
-                            print(UserSettings.shared.users)
-                            
-                            // получаем сохраненные данные из UserDefaults
-//                            let defaults = UserDefaults.standard
-//                            var savedUsers = [UserModel]()
-//                            if let data = defaults.data(forKey: "users") {
-//                                let decoder = JSONDecoder()
-//                                savedUsers = try! decoder.decode([UserModel].self, from: data)
-//                            }
-
-                            // сохраняем только новые структуры
-//                            for savedUser in savedUsers {
-//                                if savedUsers.contains(where: { userModel in
-//                                    userModel.id == savedUser.id
-//                                }) {
-//                                    savedUsers.append(savedUser)
-//                                }
-//
-//                            }
-
-                            // сохраняем обновленные данные в UserDefaults
-//                            let encoder = JSONEncoder()
-//                            let data = try! encoder.encode(savedUsers)
-//                            defaults.set(data, forKey: "users")
-                            
-                            // здесь остановился
-                            
-//                            if let dict = UserDefaults.standard.dictionary(forKey: "user") {
-//                                let firstname = dict["firstname"] as? String ?? ""
-//                                let lastname = dict["lastname"] as? String ?? ""
-//                                let email = dict["email"] as? String ?? ""
-//                                print(firstname, lastname, email)
-//                                if email != user.email {
-//                                    print("email equal")
-//                                    user = UserModel(firstname: firstNameText, lastname: lastNameText, email: email, password: "")
-//                                    showPasswordConfirmation.toggle()
-//                                }
-//                            }
+                            if !UserSettings.shared.users.contains(where: {$0.email == email}) {
+                                showPasswordConfirmation.toggle()
+                            }
                         }
-                        
-                    }) {
-                        Text("Sign in")
-                            .frame(height: 50)
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(Color(red: 1, green: 1, blue: 100))
-                            .background(Color(red: 78/255, green: 85/255, blue: 215/255))
-                            .cornerRadius(15)
-                            .background(RoundedRectangle(cornerRadius: 40).stroke(Color(red: 78/255, green: 85/255, blue: 215/255)))
-                            .fontWeight(.bold)
                     }
                     .fullScreenCover(isPresented: $showPasswordConfirmation) {
-                        PasswordConfirmationView(user: $user)
+                        PasswordConfirmationView(firstname: $firstNameText, lastname: $lastNameText, email: $email)
                     }
+                    
                 }
                 .padding(.horizontal, 30)
                 

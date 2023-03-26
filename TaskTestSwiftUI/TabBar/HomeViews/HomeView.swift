@@ -12,8 +12,8 @@ struct HomeView: View {
     @Binding var user: UserModel
     @Binding var products: [Product]
 
-    @State var flashSaleProducts = flashSaleItems
-    @State var latestProducts = latestItems
+    @State var latestProducts = [Product]()
+    @State var flashSaleProducts = [Product]()
     
     var body: some View {
         NavigationView {
@@ -28,20 +28,12 @@ struct HomeView: View {
                         }
                         .padding()
                     }
+
+                    LatestView(user: $user, latestProducts: $latestProducts)
+                        .padding()
                     
-//                    if !user.latest.isEmpty {
-//                        LatestView(user: $user)
-//                            .padding()
-//                    }
-                    if !latestProducts.isEmpty {
-                        LatestView(user: $user, latestProducts: $latestProducts)
-                            .padding()
-                    }
-                                
-                    if  !flashSaleProducts.isEmpty {
-                        FlashSaleView(user: $user, products: $flashSaleProducts)
-                            .padding()
-                    }
+                    FlashSaleView(user: $user, flashSaleProducts: $flashSaleProducts)
+                        .padding()
                     
                     Spacer()
                     
@@ -68,8 +60,38 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Trade ba data")
-            .navigationBarItems(trailing: UserView(image: user.image ?? Image("person.fill")))
+            .navigationBarItems(trailing: UserView(image: user.image))
             .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+        
+            if latestProducts.isEmpty {
+                NetworkManager.shared.fetchLatestList(with: URLs.urlLatest.rawValue) { results in
+                    switch results {
+                    case .success(let latests):
+                        latests.forEach { latest in
+                            let product = Product(name: latest.name, price: Double(latest.price), image: latest.image_url)
+                            latestProducts.append(product)
+                        }
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+            }
+            
+            NetworkManager.shared.fetchFlashSaleList(with: URLs.urlFlashSale.rawValue) { results in
+                switch results {
+                case .success(let flashSales):
+                    flashSales.forEach { flashSale in
+                        let product = Product(name: flashSale.name, price: Double(flashSale.price), image: flashSale.image_url)
+                        flashSaleProducts.append(product)
+                        print(flashSale.image_url)
+                    }
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            
         }
         
     }

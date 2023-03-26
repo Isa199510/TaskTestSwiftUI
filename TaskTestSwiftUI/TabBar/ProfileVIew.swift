@@ -10,21 +10,16 @@ import SwiftUI
 struct ProfileView: View {
     
     @State private var isShowingImagePicker = false
-    @State private var selectedImage: Image? = Image("avatar")
-    @Binding var user: UserModel
-    
     @State private var isLogOut = false
+    
+    @Binding var user: UserModel
     
     var body: some View {
         NavigationView {
             ScrollView(.vertical) {
                 VStack {
-                    
-                    //Photo Stack
                     VStack{
-                        
-//                        selectedImage?
-                        user.image?
+                        user.image
                             .resizable()
                             .frame(width: 70, height: 70)
                             .scaledToFit()
@@ -33,7 +28,6 @@ struct ProfileView: View {
                         
                         Button(action: {
                             isShowingImagePicker = true
-                            print(user.image)
                         }) {
                             Text("Change photo")
                                 .font(.caption)
@@ -42,8 +36,16 @@ struct ProfileView: View {
                     }
                     .sheet(isPresented: $isShowingImagePicker) {
                         ImagePicker { image in
-//                            selectedImage = Image(uiImage: image)
+                            
                             user.image = Image(uiImage: image)
+
+                            var updatedUsers = UserSettings.shared.users
+                            if let index = updatedUsers.firstIndex(where: { $0.id == user.id }) {
+                                updatedUsers[index] = user
+                            }
+
+                            UserSettings.shared.users = updatedUsers
+
                             isShowingImagePicker = false
                         }
                     }
@@ -69,7 +71,6 @@ struct ProfileView: View {
                         .background(Color(red: 78/255, green: 85/255, blue: 215/255))
                         .cornerRadius(15)
                         .background(RoundedRectangle(cornerRadius: 40).stroke(Color(red: 78/255, green: 85/255, blue: 215/255)))
-    //                    .fontWeight(.bold)
                     }
                     .padding(.horizontal, 30)
                     
@@ -81,16 +82,14 @@ struct ProfileView: View {
                     CustomViewProfile(imageLeft: "questionmark.circle", text: "Help", imageRight: nil, textRight: nil)
                     Button(action: {
                         isLogOut.toggle()
-                        print(user)
                     }) {
                         CustomViewProfile(imageLeft: "arrow.forward.to.line", text: "Log out", imageRight: nil, textRight: nil)
                     }
                     .foregroundColor(.black)
-//                    .fullScreenCover(isPresented: $isLogOut) {
-//
-//                        SignInPageView()
-//                    }
-                    
+                    .fullScreenCover(isPresented: $isLogOut) {
+
+                        SignInPageView()
+                    }
                     
                 }
                 .navigationTitle("Profile")

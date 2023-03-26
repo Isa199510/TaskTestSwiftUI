@@ -26,7 +26,6 @@ struct ProductItemView: View {
                         Button(action: {
                             if !user.favorites.contains(where: {$0.id == product.id}) {
                                 user.favorites.insert(product, at: 0)
-                                print(user.favorites)
                             } else {
                                 guard let index = user.favorites.firstIndex(where: {$0.id == product.id}) else { return }
                                 user.favorites.remove(at: index)
@@ -44,20 +43,7 @@ struct ProductItemView: View {
                         }
                         
                         Button(action: {
-                            
-                            
-                            //action for button
-//                            NetworkManager.shared.fetchLatestList(with: URLs.urlLatest.rawValue) { results in
-//                                print(results, type(of: results))
-//                                switch results {
-//                                case .success(let latest):
-//                                    print(latest)
-//                                    //
-//                                case .failure(_): break
-//                                    //
-//                                }
-//                            }
-                            
+                            // action
                         }) {
                             Image(systemName: "plus")
                                 .frame(width: geometry.size.width / 20, height: geometry.size.width / 20)

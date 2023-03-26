@@ -15,11 +15,28 @@ struct FavoritesView: View {
         List {
             ForEach(Array(user.favorites.enumerated()), id: \.0) { (_, value) in
                 HStack {
-                    Image(value.image)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 70, height: 70)
-                        .padding()
+                    
+                    AsyncImage(
+                        url: URL(string: value.image),
+                        transaction: Transaction(animation: .easeInOut)
+                    ) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 70, height: 70)
+                                .padding()
+                                .transition(.scale(scale: 0.1, anchor: .topLeading))
+                        case .failure:
+                            Image(systemName: "wifi.slash")
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                    
                     VStack {
                         Text(value.name)
                             .font(.title2)

@@ -37,13 +37,9 @@ var flashSaleItems = [
     Product(name: "iPhone 11 Pro", price: 50000, image: "iPhone11Pro")
 ]
 
-var latestItems = [
-    Product(name: "iPhone 7s", price: 30000, image: "iPhone7"),
-    Product(name: "iPhone 10 Pro", price: 40000, image: "iPhone10Pro"),
-    Product(name: "iPhone 11 Pro", price: 50000, image: "iPhone11Pro")
-]
+var latestItems = [Product]()
 
-var userManager = UserManager()
+
 var selectedProducts: [Product] = getSelectedProducts()
 var selectGoods: [Product] = [Product]()
 

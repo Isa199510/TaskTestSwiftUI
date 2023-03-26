@@ -9,7 +9,12 @@ import SwiftUI
 
 struct PasswordConfirmationView: View {
     
-    @Binding var user: UserModel
+    
+    @Binding var firstname: String
+    @Binding var lastname: String
+    @Binding var email: String
+    
+    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "")
     
     @State private var password = ""
     @State private var passwordConfirmation = ""
@@ -36,11 +41,9 @@ struct PasswordConfirmationView: View {
                 
                 
                 CustomButtonView(title: "Continue") {
-                    if password == passwordConfirmation && password.count > 5{
-                        user.password = password
-                        let dict: [String: Any] = ["id" : user.id, "firstname": user.firstname, "lastname": user.lastname, "email": user.email, "image" : user.image ?? "person.fill", "password" : user.password]
-                        UserDefaults.standard.set(dict, forKey: "user")
-//                        userManager.registerUser(user: user)
+                    if password == passwordConfirmation && password.count > 5 {
+                        user = UserModel(firstname: firstname, lastname: lastname, email: email, password: password)
+                        UserSettings.shared.users.append(user)
                         showTabBar.toggle()
                     }
                 }
@@ -60,7 +63,7 @@ struct PasswordConfirmationView: View {
 
 struct PasswordConfirmationView_Previews: PreviewProvider {
     static var previews: some View {
-        PasswordConfirmationView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "")))
+        PasswordConfirmationView(firstname: .constant(""), lastname: .constant(""), email: .constant(""))
     }
 }
 

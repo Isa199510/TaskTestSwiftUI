@@ -23,10 +23,14 @@ struct Latest: Codable {
     let image_url: String
 }
 
-struct FlashSaleAPI {
+struct FlashSaleAPI: Codable {
     let flash_sale: [FlashSale]
 }
 
-struct FlashSale {
-    
+struct FlashSale: Codable {
+    let category: String
+    let name: String
+    let price: Double
+    let discount: Int
+    let image_url: String
 }

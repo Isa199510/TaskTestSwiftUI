@@ -10,7 +10,7 @@ import SwiftUI
 struct FlashSaleView: View {
     
     @Binding var user: UserModel
-    @Binding var products: [Product]
+    @Binding var flashSaleProducts: [Product]
     
     var body: some View {
         VStack {
@@ -31,13 +31,12 @@ struct FlashSaleView: View {
             .padding(.trailing)
             ScrollView(.horizontal) {
                 HStack(spacing: 20) {
-                    ForEach(Array(products.enumerated()), id: \.0) { index, value in
-                        if !products.isEmpty {
-                            ProductItemView(product: $products[index], user: $user)
-                                .frame(width: UIScreen.main.bounds.width / 2 - 20, height: 250)
-                                .cornerRadius(10)
-
-                        }
+                    ForEach(Array(flashSaleProducts.enumerated()), id: \.0) { index, product in
+                        FlashSaleItemView(user: $user, product: .constant(product))
+                            .frame(width: UIScreen.main.bounds.width / 2 - 20, height: 250)
+                            .cornerRadius(10)
+                        
+                        
                     }
                 }
             }
@@ -47,7 +46,7 @@ struct FlashSaleView: View {
 
 struct FlashSaleView_Previews: PreviewProvider {
     static var previews: some View {
-        FlashSaleView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "")), products: .constant(flashSaleItems))
+        FlashSaleView(user: .constant(UserModel(firstname: "", lastname: "", email: "", password: "")), flashSaleProducts: .constant(flashSaleItems))
             .padding()
     }
 }

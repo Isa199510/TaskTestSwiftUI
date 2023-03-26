@@ -32,14 +32,7 @@ struct LatestView: View {
 
             ScrollView(.horizontal) {
                 HStack(spacing: 20) {
-//                    ForEach(Array(user.latest.enumerated()), id: \.0) { (index, value) in
-//                        let product = Product(name: value.name, price: Double(value.price), image: value.image)
-//                        LatestItemView(product: .constant(product))
-//                            .frame(width: UIScreen.main.bounds.width / 3 - 20, height: 150)
-//                            .clipShape(RoundedRectangle(cornerRadius: 15))
-//                    }
-                    
-                    ForEach(Array(latestProducts.enumerated()), id: \.0) { ( _ ,product) in
+                    ForEach(Array(latestProducts.enumerated()), id: \.0) { ( _ , product) in
                         LatestItemView(product: .constant(product))
                             .frame(width: UIScreen.main.bounds.width / 3 - 20, height: 150)
                             .clipShape(RoundedRectangle(cornerRadius: 15))

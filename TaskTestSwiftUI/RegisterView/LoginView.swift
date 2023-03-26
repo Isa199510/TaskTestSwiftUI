@@ -9,9 +9,6 @@ import SwiftUI
 
 struct LogInView: View {
     
-    let log = "Isa@mail.ru"
-    let pass = "123"
-    
     @State private var logIn = ""
     @State private var password = ""
     @State private var showTabBar = false
@@ -31,27 +28,20 @@ struct LogInView: View {
                 Spacer()
                 
                 VStack(spacing: 40) {
-                    TextFieldView(text: $logIn, placeholder: "First name")
+                    TextFieldView(text: $logIn, placeholder: "Email")
                     PasswordFieldView(password: $password)
                 }
                 .padding(.horizontal, 40)
                 
                 CustomButtonView(title: "Login") {
+                    
                     if logIn.isValidEmail() {
-                        if let dict = UserDefaults.standard.dictionary(forKey: "user") {
-                            let userFirstname = dict["firstname"] as? String ?? ""
-                            let userLastname = dict["lastname"] as? String ?? ""
-                            let userEmail = dict["email"] as? String ?? ""
-                            let userPassword = dict["password"] as? String ?? ""
-                            let userImage = dict["image"] as? Image ?? Image(systemName: "person.fill")
-                            
-                            if logIn == userEmail && password == userPassword {
-                                user = UserModel(firstname: userFirstname, lastname: userLastname, email: userEmail, password: userPassword)
-                                showTabBar.toggle()
-                            } else {
-                                print("Error")
-                            }
-                            
+                        if UserSettings.shared.users.contains(where: {$0.email == logIn && $0.password == password}) {
+                            guard let indexUser = UserSettings.shared.users.firstIndex(where: {$0.email == logIn && $0.password == password}) else { return }
+                            user = UserSettings.shared.users[indexUser]
+                            showTabBar.toggle()
+                        } else {
+                            print("no user")
                         }
                     } else {
                         print("no valid")
@@ -66,6 +56,8 @@ struct LogInView: View {
                 Spacer(minLength: 200)
                 
             }
+            .background(Color(red: 250/255, green: 249/255, blue: 255/255))
+            .edgesIgnoringSafeArea(.all)
         }
         
     }
