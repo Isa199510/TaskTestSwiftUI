@@ -13,8 +13,11 @@ struct LogInView: View {
     @State private var password = ""
     @State private var showTabBar = false
     
-    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "")
-    @State var products = PRODUCTS
+    @State private var user = UserModel(firstname: "", lastname: "", email: "", password: "")
+    @State private var products = PRODUCTS
+    
+    @State private var textError = ""
+    @State private var showTextError = false
     
     var body: some View {
         
@@ -30,6 +33,7 @@ struct LogInView: View {
                 VStack(spacing: 40) {
                     TextFieldView(text: $logIn, placeholder: "Email")
                     PasswordFieldView(password: $password)
+                    
                 }
                 .padding(.horizontal, 40)
                 
@@ -41,10 +45,12 @@ struct LogInView: View {
                             user = UserSettings.shared.users[indexUser]
                             showTabBar.toggle()
                         } else {
-                            print("no user")
+                            showTextError = true
+                            textError = "login or password entered incorrectly"
                         }
                     } else {
-                        print("no valid")
+                        showTextError = true
+                        textError = "incorrect mail format"
                     }
                 }
                 .padding(.horizontal, 40)
@@ -52,6 +58,12 @@ struct LogInView: View {
                 .fullScreenCover(isPresented: $showTabBar) {
                     TabBarView(user: $user, products: $products)
                 }
+                
+                Text(textError)
+                    .foregroundColor(.red)
+                    .font(.caption)
+                    .opacity(showTextError ? 1 : 0)
+                    .cornerRadius(10)
                 
                 Spacer(minLength: 200)
                 

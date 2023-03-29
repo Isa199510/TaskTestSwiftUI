@@ -18,7 +18,10 @@ struct SignInPageView: View {
     @State private var lastNameText = ""
     @State private var email = ""
     
-    @State var user = UserModel(firstname: "", lastname: "", email: "", password: "")
+    @State private var user = UserModel(firstname: "", lastname: "", email: "", password: "")
+    
+    @State private var textError = ""
+    @State private var showTextError = false
     
     var body: some View {
         NavigationView {
@@ -38,7 +41,13 @@ struct SignInPageView: View {
                         if firstNameText.count >= 3 && lastNameText.count >= 3 && email.isValidEmail() {
                             if !UserSettings.shared.users.contains(where: {$0.email == email}) {
                                 showPasswordConfirmation.toggle()
+                            } else {
+                                showTextError = true
+                                textError = "such a user is already in the database"
                             }
+                        } else {
+                            showTextError = true
+                            textError = "incorrect mail format"
                         }
                     }
                     .fullScreenCover(isPresented: $showPasswordConfirmation) {
@@ -58,17 +67,22 @@ struct SignInPageView: View {
                     .fullScreenCover(isPresented: $showLogIn) {
                         LogInView()
                     }
-                    
                     Spacer()
                     
                 }
                 .padding(.horizontal, 30)
-                .padding(.bottom, 30)
                 .font(.caption)
+                
+                Text(textError)
+                    .foregroundColor(.red)
+                    .font(.caption)
+                    .opacity(showTextError ? 1 : 0)
+                    .cornerRadius(10)
                 
                 VStack(alignment: .leading, spacing: 40) {
                     Button {
                         //action
+                        UserDefaults.standard.removeObject(forKey: "users")
                     } label: {
                         Image("googleIcon")
                         Text("Sign in with Google")
